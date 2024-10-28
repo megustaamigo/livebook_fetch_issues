@@ -19,7 +19,8 @@ Mix.install([
   {:kino_vega_lite, "~> 0.1.11"},
   {:livebook_project, path: "~/livebook_project"},
   {:ecto_sql, "~> 3.6"},
-  {:postgrex, ">= 0.0.0"}
+  {:postgrex, ">= 0.0.0"},
+  {:req, "~> 0.3.0"}
 ])
 ```
 

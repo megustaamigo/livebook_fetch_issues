@@ -28,7 +28,8 @@ defmodule LivebookProject.MixProject do
       {:vega_lite, "~> 0.1.9"},
       {:kino_vega_lite, "~> 0.1.11"},
       {:ecto_sql, "~> 3.6"},
-      {:postgrex, ">= 0.0.0"}
+      {:postgrex, ">= 0.0.0"},
+      {:req, "~> 0.5.6"}
     ]
   end
 end
