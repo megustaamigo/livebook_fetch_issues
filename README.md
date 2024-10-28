@@ -1,21 +1,8 @@
 # LivebookProject
 
-**TODO: Add description**
+Follow these steps to work with the livebook project:
 
-## Installation
-
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `livebook_project` to your list of dependencies in `mix.exs`:
-
-```elixir
-def deps do
-  [
-    {:livebook_project, "~> 0.1.0"}
-  ]
-end
-```
-
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/livebook_project>.
+1. Install livebook
+2. Open Livebook
+3. Open the .livemd file of this dictionary within livebook
 

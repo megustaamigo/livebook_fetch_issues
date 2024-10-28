@@ -6,9 +6,7 @@ defmodule LivebookProject.Item do
     field(:title, :string)
     field(:number, :integer)
     field(:state, :string)
-    # Change to :naive_datetime if using datetime
     field(:issues_updated_at, :string)
-
     timestamps()
   end
 
