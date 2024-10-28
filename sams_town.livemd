@@ -1,0 +1,201 @@
+<!-- livebook:{"app_settings":{"access_type":"public","slug":"test"}} -->
+
+# Sam's Town
+
+```elixir
+Application.put_env(:livebook_project, LivebookProject.MyRepo,
+  database: "issues",
+  username: "postgres",
+  password: "younghustler",
+  hostname: "localhost",
+  pool_size: 10
+)
+
+Mix.install([
+  {:httpoison, "~> 1.0.0" },
+  {:jason, "~> 1.2"},
+  {:poison, "~> 3.1"},
+  {:vega_lite, "~> 0.1.9"},
+  {:kino_vega_lite, "~> 0.1.11"},
+  {:livebook_project, path: "~/livebook_project"},
+  {:ecto_sql, "~> 3.6"},
+  {:postgrex, ">= 0.0.0"},
+  {:req, "~> 0.3.0"}
+])
+```
+
+## Resources
+
+Here I will present some Resources that I find useful:
+
+1. [Kino,Vegalite,Explorer Great YouTube Example Usage](https://www.youtube.com/watch?v=SMzRml_J8fc&ab_channel=ElixirZone)
+2. [Kino Documentation](https://hexdocs.pm/kino/Kino.Input.html)
+3. [General Understanding of LiveBook YouTube Channel](https://www.youtube.com/@livebookdev/videos)
+4. [Book Programming Elixir Amazon Link](https://www.amazon.de/Programming-Elixir-1-6-Functional-Concurrent/dp/1680502999/ref=asc_df_1680502999/?tag=googshopde-21&linkCode=df0&hvadid=696184104678&hvpos=&hvnetw=g&hvrand=10628741455178875777&hvpone=&hvptwo=&hvqmt=&hvdev=c&hvdvcmdl=&hvlocint=&hvlocphy=9044825&hvtargid=pla-2281435176218&psc=1&mcid=4ff84845cd2e3155ba4523f06d77be94&th=1&psc=1&hvocijid=10628741455178875777-1680502999-&hvexpln=75&gad_source=1)
+5. [ExUnit Documentation](https://hexdocs.pm/ex_unit/ExUnit.html)
+6. [VegaLite Example Usage](https://github.com/livebook-dev/livebook/blob/main/lib/livebook/notebook/learn/intro_to_vega_lite.livemd)
+
+<!-- livebook:{"branch_parent_index":0} -->
+
+## TDD and Testing in Elixir, Quick Introduction
+
+Before we start with a proper description of what this project is about, we will shortly talk about Test Driven Development (TDD) and ExUnit.
+
+Test Driven Development follows a simple life cycle:
+
+1. Write a red/failing test 🔴
+2. Write code to make the test pass ✅
+3. Refactor the code 🔨
+4. Repeat this circle   🔁
+
+TDD is a programming practice with many advantages and is the standard at Modell Aachen. You have probably heard a lot about it already but this project recommends you to follow this practice.
+
+The ExUnit (https://hexdocs.pm/ex_unit/ExUnit.html) testing framework for Elixir enables TDD and we start our Testing Framework via the following code:
+
+<!-- livebook:{"reevaluate_automatically":true} -->
+
+```elixir
+ExUnit.start()
+```
+
+```elixir
+defmodule SomeFunction do
+  def hello do
+    "Hello there"
+  end
+
+  def convert_to_string(list_of_numbers) do
+    Enum.map(list_of_numbers, fn number ->
+      Integer.to_string(number)
+    end)
+  end
+  
+end
+```
+
+```elixir
+defmodule SomeFunctionTest do
+  use ExUnit.Case
+  
+  test "let us see if our function hello outputs what we expect" do
+    assert SomeFunction.hello == "Hello there"
+  end
+
+  test "testing the string conversion of the SomeFunction Module" do
+    assert SomeFunction.convert_to_string([1,4,7,9,10]) == ["1","4","7","9","10"]
+  end
+  
+end
+```
+
+```elixir
+ExUnit.run()
+```
+
+## Interactive Fetching GitHub Issues Project
+
+The following Project attempts to provide an overview of what can be accomplished within the livebook environment and a step-by-step documentation of how it is implemented.
+
+Take a look at the following flowchart, it provides an overview of the workflow of our project. In <span style="color:green">__green__</span> you can see what has already been implemented versus <span style="color:red">__red__</span> shows what is yet to be done in this project.
+
+<!-- livebook:{"break_markdown":true} -->
+
+<!-- Learn more at https://mermaid-js.github.io/mermaid -->
+
+```mermaid
+flowchart TD;
+  id1(User):::implemented -- provides User Name, Project Name, Count --> id2(Client):::implemented;
+  id2--sends GET Request -->id3(Github Repo):::implemented;
+  id3-- provides error -->id4(Error Handling):::need_implementation;
+  id3 --returns relevant data --> id5(Response Handling):::implemented;
+  id4-- provide meaningful error message -->User:::implemented;
+  id5 -- insert --> id7(Database):::need_implementation
+  id5 -- formats data --> id6(Creation of Table and Visualization):::implemented
+  id6 -- presenting created data --> User
+ style id1 fill:#,stroke:#333,stroke-width:4px
+ classDef implemented fill:#797, stroke-width:2, stroke:black
+ classDef need_implementation fill:red, stroke-width:2px, stroke:black
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+Now that we have a rough overview of our project, we can take a look at the finished version to get a better idea of functionality and interactivity.
+
+__DISCLAIMER__: code provided in the following cells does not tell the whole story. This is due to the fact that the functions doing most work are hidden under the hood for now.
+
+For your understanding, in the upcoming code blocks we call several functions from modules called:
+
+__Cli__, __LivebookProject__, __Visualization__
+
+Named modules are saved locally on our machine and can be accessed within our livebook projects. Importantly, we added our local project as dependency in the uppermost code cell by adding:
+
+__{:livebook_project, path: "~/livebook_project"}__
+
+<!-- livebook:{"break_markdown":true} -->
+
+Take a look at the upcoming code cell and evaluate it.
+
+Upon evaluation, you will be provided with a an Input Form in which you can provide relevant information to the Client to make a request. The input form is easily created via the Kino library which we also added as a dependency to our project in the uppermost code cell. Kino is very well integrated with livebook and allows for a wide range of possibilities:
+
+1. Visualization
+2. Interactive Control
+3. Rendering notebooks into production-like applications
+
+For now, filling it out and sending the information will do nothing but only because nobody is listening yet. We will come to the point of listening at the last code cell.
+
+```elixir
+LivebookProject.Greetings.instructions()
+
+inputs = [
+  name: Kino.Input.text("Username", default: "tensorflow"),
+  project_name: Kino.Input.text("Project Name", default: "tensorflow"),
+  count: Kino.Input.range("How many issues should be displayed?", [:step]),
+  to_database: Kino.Input.text("Should the data be transferred to the database? [y/n]", default: "n")
+]
+
+form = Kino.Control.form(inputs, submit: "Send")
+
+
+```
+
+The two upcoming code cells create new "Frames". Frames can be fed with data to be vsiualized and their contents can be updated via other Kino functions. Soon, we will use the two frames to fill them with two kinds of visualization for our fetched data.
+
+Evaluate both of them and continue to the last code block.
+
+```elixir
+frame_for_data_table = Kino.Frame.new()
+```
+
+```elixir
+frame_for_visualization = Kino.Frame.new()
+```
+
+We arrived at our final and most relevant code cell. Here we create a listener that awaits input from our form. It starts a new process and runs the code whenever we click the "send" button on our form from above.
+
+Do the following:
+
+1. Evaluate the cell
+2. Input information into the form above
+3. Press send
+4. Investigate the shown visualizations
+
+All the data which we use to visualize in our two frames is provided by the Cli.run function. This is the access point to our local Project and does all the work under the hood. In the next section we will build the project from scracth and dive deeper into the hidden functions that fetch and format the issues.
+
+```elixir
+Kino.listen(form, fn %{data: %{name: name, project_name: project_name, count: count, to_database: to_database}, origin: _origin} ->
+  case to_database do
+    "y" ->
+      data =  LivebookProject.Cli.run([name, project_name, count])
+      Kino.Frame.append(frame_for_data_table, Kino.DataTable.new(data))
+      Kino.Frame.append(frame_for_visualization, Visualization.create_chart(data))
+      data
+      |> LivebookProject.Cli.into_databse()
+      
+    _ -> 
+      data =  LivebookProject.Cli.run([name, project_name, count])
+      Kino.Frame.append(frame_for_data_table, Kino.DataTable.new(data))
+      Kino.Frame.append(frame_for_visualization, LivebookProject.Visualization.create_chart(data))
+  end  
+end)
+
+```
