@@ -14,7 +14,8 @@ defmodule LivebookProject.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger]
+      extra_applications: [:logger],
+      mod: {LivebookProject.Application, []}
     ]
   end
 
@@ -25,7 +26,9 @@ defmodule LivebookProject.MixProject do
       {:jason, "~> 1.2"},
       {:poison, "~> 3.1"},
       {:vega_lite, "~> 0.1.9"},
-      {:kino_vega_lite, "~> 0.1.11"}
+      {:kino_vega_lite, "~> 0.1.11"},
+      {:ecto_sql, "~> 3.6"},
+      {:postgrex, ">= 0.0.0"}
     ]
   end
 end

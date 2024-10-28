@@ -1,20 +1,15 @@
-defmodule GithubIssues do
+defmodule LivebookProject.GithubIssues do
   alias LivebookProject, as: LivebookProject
+  @headers [{"User-Agent", "Samuel"}]
 
   def fetch(user, project) do
     construct_url(user, project)
-    |> HTTPoison.get(headers())
+    |> HTTPoison.get(@headers)
     |> handle_response
   end
 
   def construct_url(user, project) do
     "https://api.github.com/repos/#{user}/#{project}/issues"
-  end
-
-  defp headers() do
-    [
-      {"User-Agent", "Samuel"}
-    ]
   end
 
   def handle_response({_, %{status_code: status_code, body: body}}) do
