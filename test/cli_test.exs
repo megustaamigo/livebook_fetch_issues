@@ -43,6 +43,7 @@ defmodule CliTest do
   test "status code is 200" do
     assert LivebookProject.GithubIssues.check_for_error(200) == :ok
     assert LivebookProject.GithubIssues.check_for_error(123) == :error
+    assert LivebookProject.GithubIssues.check_for_error(700) == :error
   end
 
   test "decode the response body  and just return the body" do
